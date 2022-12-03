@@ -1,0 +1,43 @@
+version: '3.6'
+
+volumes:
+  mongodb_data:
+
+services:
+  #frontend:
+  #  container_name: frontend
+  #  image: frontend:1.0.0
+  #  build:
+  #    context: ./frontend
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - 80:80
+  #  depends_on:
+  #    - backend
+  #  restart: unless-stopped
+
+  backend:
+    container_name: backend
+    image: backend:1.0.0
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - URL_MONGO=mongodb://api:docker1234@mongodb
+    ports:
+      - 4000:53372
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    environment: 
+      - MONGO_INITDB_ROOT_USERNAME=api
+      - MONGO_INITDB_ROOT_PASSWORD=docker1234
+    volumes:
+      - mongodb_data:/data/db
+    ports: 
+      - 8066:27017
+    restart: unless-stopped
